@@ -4,8 +4,8 @@ pipeline {
 
     environment {
 
-        AWS_REGION = "us-east-1"
-        AWS_ACCOUNT_ID = "586631184417"
+        AWS_REGION = "ap-south-1"
+        AWS_ACCOUNT_ID = "768309077490"
 
         FRONTEND_REPO = "codeinsight-frontend"
         USER_REPO = "codeinsight-user-service"
@@ -18,87 +18,72 @@ pipeline {
         stage('Checkout') {
             steps {
                 git branch: 'main',
-                url: 'https://github.com/sarguru16/CodeInsight-AI.git'
+                url: 'https://github.com/prawinrk/CodeInsight-AI.git'
             }
         }
 
         stage('Login to ECR') {
             steps {
+                // The 'withAWS' block must wrap the commands that need AWS access
                 withAWS(credentials: 'aws-ecr-creds', region: env.AWS_REGION) {
-                sh '''
-                aws ecr get-login-password --region $AWS_REGION \
-                | docker login \
-                --username AWS \
-                --password-stdin \
-                $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com
-                '''
+                    sh '''
+                        aws ecr get-login-password --region $AWS_REGION \
+                        | docker login \
+                        --username AWS \
+                        --password-stdin \
+                        $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com
+                    '''
+                }
             }
         }
 
         stage('Build Frontend') {
-
             steps {
-
                 sh '''
-                docker build -t $FRONTEND_REPO ./frontend
-
-                docker tag $FRONTEND_REPO:latest \
-                $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$FRONTEND_REPO:latest
+                    docker build -t $FRONTEND_REPO ./frontend
+                    docker tag $FRONTEND_REPO:latest \
+                    $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$FRONTEND_REPO:latest
                 '''
             }
         }
 
         stage('Build User Service') {
-
             steps {
-
                 sh '''
-                docker build -t $USER_REPO ./backend/user-service
-
-                docker tag $USER_REPO:latest \
-                $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$USER_REPO:latest
+                    docker build -t $USER_REPO ./backend/user-service
+                    docker tag $USER_REPO:latest \
+                    $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$USER_REPO:latest
                 '''
             }
         }
 
         stage('Build Coding Service') {
-
             steps {
-
                 sh '''
-                docker build -t $CODING_REPO ./backend/coding-service
-
-                docker tag $CODING_REPO:latest \
-                $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$CODING_REPO:latest
+                    docker build -t $CODING_REPO ./backend/coding-service
+                    docker tag $CODING_REPO:latest \
+                    $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$CODING_REPO:latest
                 '''
             }
         }
 
         stage('Build AI Service') {
-
             steps {
-
                 sh '''
-                docker build -t $AI_REPO ./backend/ai-service
-
-                docker tag $AI_REPO:latest \
-                $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$AI_REPO:latest
+                    docker build -t $AI_REPO ./backend/ai-service
+                    docker tag $AI_REPO:latest \
+                    $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$AI_REPO:latest
                 '''
             }
         }
 
         stage('Push Images') {
-
             steps {
-
                 sh '''
-                docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$FRONTEND_REPO:latest
-
-                docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$USER_REPO:latest
-
-                docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$CODING_REPO:latest
-
-                docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$AI_REPO:latest
+                    docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$FRONTEND_REPO:latest
+                    docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$USER_REPO:latest
+                    docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$CODING_REPO:latest
+                    docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$AI_REPO:latest
                 '''
             }
         }
