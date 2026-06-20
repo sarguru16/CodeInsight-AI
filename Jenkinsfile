@@ -4,8 +4,8 @@ pipeline {
 
     environment {
 
-        AWS_REGION = "ap-south-1"
-        AWS_ACCOUNT_ID = "768309077490"
+        AWS_REGION = "us-east-1"
+        AWS_ACCOUNT_ID = "586631184417"
 
         FRONTEND_REPO = "codeinsight-frontend"
         USER_REPO = "codeinsight-user-service"
@@ -18,7 +18,7 @@ pipeline {
         stage('Checkout') {
             steps {
                 git branch: 'main',
-                url: 'https://github.com/prawinrk/CodeInsight-AI.git'
+                url: 'https://github.com/sarguru16/CodeInsight-AI.git'
             }
         }
 
