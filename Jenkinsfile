@@ -24,7 +24,6 @@ pipeline {
 
         stage('Login to ECR') {
             steps {
-                // The 'withAWS' block must wrap the commands that need AWS access
                 withAWS(credentials: 'aws-ecr-creds', region: env.AWS_REGION) {
                     sh '''
                         aws ecr get-login-password --region $AWS_REGION \
