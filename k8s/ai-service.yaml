@@ -3,29 +3,27 @@ kind: Deployment
 metadata:
   name: ai-service
   namespace: codeinsight
-
 spec:
   replicas: 1
-
   selector:
     matchLabels:
       app: ai-service
-
   template:
     metadata:
       labels:
         app: ai-service
-
     spec:
-
       imagePullSecrets:
         - name: ecr-secret
-
       containers:
         - name: ai-service
-
           image: 586631184417.dkr.ecr.us-east-1.amazonaws.com/codeinsight-ai-service:latest
-
+          env:
+            - name: GROQ_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: groq-secret
+                  key: GROQ_API_KEY
           ports:
             - containerPort: 5001
 ---
@@ -34,11 +32,9 @@ kind: Service
 metadata:
   name: ai-service
   namespace: codeinsight
-
 spec:
   selector:
     app: ai-service
-
   ports:
     - port: 5001
       targetPort: 5001
