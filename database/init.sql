@@ -9,7 +9,9 @@ CREATE TABLE IF NOT EXISTS users (
     id INT AUTO_INCREMENT PRIMARY KEY,
     email VARCHAR(255) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    reset_token VARCHAR(255) DEFAULT NULL,
+    reset_expires_at DATETIME DEFAULT NULL
 );
 
 -- =========================
@@ -77,5 +79,5 @@ INSERT IGNORE INTO users (
 VALUES (
     1,
     'test@example.com',
-    '$2b$12$Z3KY7zuqZcLPQXx7G3n0W.pDUE6qitcHNBrmQo59v5oqh.xAG7XPm'
+    '$2b$12$DnDxqZ7zoRBATHtwmee9num9K6Gnqy5CXetLRyB.BKX.oGbrntDXm'
 );
