@@ -18,7 +18,7 @@ spec:
 
       containers:
         - name: ai-service
-          image: 768309077490.dkr.ecr.ap-south-1.amazonaws.com/codeinsight-ai-service:latest
+          image: 586631184417.dkr.ecr.us-east-1.amazonaws.com/codeinsight-ai-service:latest
           imagePullPolicy: Always
 
           ports:

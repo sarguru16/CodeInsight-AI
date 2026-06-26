@@ -18,7 +18,7 @@ spec:
 
       containers:
         - name: user-service
-          image: 768309077490.dkr.ecr.ap-south-1.amazonaws.com/codeinsight-user-service:latest
+          image: 586631184417.dkr.ecr.us-east-1.amazonaws.com/codeinsight-user-service:latest
           imagePullPolicy: Always
 
           ports:
@@ -48,7 +48,7 @@ spec:
 
             # Change this if your JWT secret is different
             - name: JWT_SECRET_KEY
-              value: "codeinsight-secret-key"
+              value: "codeinsight_super_secret_key_12345678901234567890"
 
           readinessProbe:
             httpGet:
