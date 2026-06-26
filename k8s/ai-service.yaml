@@ -47,10 +47,13 @@ spec:
                   key: MYSQL_PASSWORD
 
             - name: MODEL_NAME
-              value: "llama3-70b-8192"
+              value: "openai/gpt-oss-120b"
 
             - name: GROQ_API_KEY
-              value: "YOUR_GROQ_API_KEY"
+              valueFrom:
+                secretKeyRef:
+                  name: groq-secret
+                  key: GROQ_API_KEY
 
           readinessProbe:
             httpGet:
